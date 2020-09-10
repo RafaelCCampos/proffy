@@ -2,35 +2,53 @@ import React from 'react'
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
 import './styles.css';
+import api from '../../services/api';
 
-function TeacherItem() {
+export interface Teacher {
+    avatar: string,
+    bio: string,
+    cost: number,
+    id: number,
+    name: string,
+    subject: string,
+    whatsapp: string,
+};
+
+interface TeacherItemProps {
+    teacher: Teacher;
+};
+
+const  TeacherItem: React.FunctionComponent<TeacherItemProps> = ({ teacher }) => {
+    function createNewConnection() {
+        api.post('/connections', {
+            user_id: teacher.id
+        })
+    }
+    
     return (
         <article className="teacher-item">
             <header>
-                <img src="https://scontent-gru2-2.xx.fbcdn.net/v/t1.0-9/37680762_1842341062521595_6217034314228432896_n.jpg?_nc_cat=100&_nc_sid=09cbfe&_nc_eui2=AeFWBMo1hG-kdrXwai62waw0hwwj5BaA5SqHDCPkFoDlKmCS0IPLmybseWEi5S5dE6gnwQ1ZKMglATIFqo7IY6sp&_nc_ohc=ZwJui2URq-EAX-RBQY_&_nc_ht=scontent-gru2-2.xx&oh=49144b5b9ce308233fe347338d4b3708&oe=5F502D18" 
-                    alt="Rafael Campos" 
-                />
+                <img src={teacher.avatar} alt={teacher.name}/>
                 <div>
-                    <strong>Rafael Campos</strong>
-                    <span>Matemática</span>
+                    <strong>{teacher.name}</strong>
+                    <span>{teacher.subject}</span>
                 </div>
             </header>
 
-            <p>
-                Instrutor de Matemática, minha missão de vida é levar conhecimento e contribuir para o crescimento de quem se interessar.
-                <br /> <br />
-                Comecei minha jornada ainda no ensino fundamental, quando minha professora me indicava para dar aulas particulares para meus colégas de classe.
-            </p>
+            <p>{teacher.bio}</p>
 
             <footer>
                 <p>
                     Preço/Hora        
-                    <strong>R$ 80,00</strong>
+                    <strong>R$ {teacher.cost}</strong>
                 </p>
-                <button type="button">
+                <a 
+                    target="_blank"
+                    onClick={createNewConnection} 
+                    href={`https://wa.me/${teacher.whatsapp}`}>
                     <img src={whatsappIcon} alt="Ícone whatsapp" />
                     Entrar em contato
-                </button>
+                </a>
             </footer>
 		</article>
     );
